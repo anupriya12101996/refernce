@@ -10,15 +10,16 @@
 <div class="header-content">
 <div class="sign-in-form">
  <h1>Sign In Now</h1>
-<form>
-<input type="email"name="email" class="input-box " placeholder="Your Email">
+<form action="/login" method="post" name="myform">
+<input type="email" name="email" class="input-box " placeholder="Your Email">
 <input type="password" name="password" class="input-box " placeholder="Your Password" >
 <p class="par"><span><input type="checkbox"  checked=""></span>I agree to the Term of Services</p>
-<button type="submit" class="sign-btn">Sign In</button>
-<p>Don't have an account ?<a href="#">Sign Up</a></p>
+<button type="submit" class="sign-btn" value="sign in" >Sign In</button>
+<p>Don't have an account ?<a href="/register">Sign Up</a></p>
  </form>
  </div> 
 </div>  
 <header>
+
 </body>
 </html>

@@ -1,6 +1,7 @@
 const express=require('express');
 const path=require("path");
 const hbs=require("hbs");
+const bcrypt=require("bcryptjs");
 const app=express();
 require("./db/conn");
 const Register=require("./models/register");
@@ -26,6 +27,21 @@ app.get("/register",(req,res)=>{
 res.render("register");
 });
 
+app.get("/addstudent",(req,res)=>{
+res.render("addstudent");
+})
+
+app.get("/updatestudent",(req,res)=>{
+res.render("updatestudent");
+})
+
+app.get("/viewstudent",(req,res)=>{
+res.render("viewstudent");
+})
+
+app.get("/login",(req,res)=>{
+res.render("login");
+})
 // create a new user in our database
 app.post("/register",async(req,res)=>{
 try{
@@ -33,6 +49,7 @@ try{
 
 const password=req.body.password;
 const cpassword=req.body.confirmpassword;
+
 
 if(password===cpassword){
 
@@ -42,21 +59,45 @@ password :password,
 confirmpassword :cpassword,
 
 });
+
  const registered =await registerStudent.save();
- res.send(`successfully registered ${registered}`);
  res.status(201).render("login");
 }else{
 res.send("passwords are not matching");
 }
-
 }catch(error){
 res.status(400).send(error);
 }
 })
+
 app.get("/login",(req,res)=>{
 res.render("login");
 })
 
-app.listen(port,()=>{
-console.log(`server is runing at port no ${port}`);
+
+//login check
+
+app.post("/login",async(req,res)=>{
+try {
+ 
+const email=req.body.email;
+const password=req.body.password;
+
+
+const useremail=await Register.findOne({email:email});
+const isMatch= await bcrypt.compare(password,useremail.password);
+
+if(isMatch){
+res.status(201).render("register");
+}else{
+res.send("Invaid login details");
+}
+
+
+} catch (error) {
+ res.status(400).send("invalid login details"); 
+}
 })
+
+app.listen(port,()=>{
+console.log(`server is runing at port no ${port}`);})
