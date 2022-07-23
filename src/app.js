@@ -8,6 +8,7 @@ const Register = require("./models/register");
 const AddStudent = require("./models/studentSchema");
 const { json } = require("express");
 const port = process.env.PORT || 3000;
+const XLSX = require("xlsx");
 
 const static_path = (path.join(__dirname, "../public"));
 const template_path = (path.join(__dirname, "../templates/views"));
@@ -38,6 +39,28 @@ app.get("/viewstudent", (req, res) => {
 
 app.get("/login", (req, res) => {
     res.render("login");
+});
+
+// download excel sheet
+app.get("/downloadsheet", async (req, res) => {
+    const studentsdata = await AddStudent.find({});
+    let finalData = [];
+    for(let i = 0; i < studentsdata.length; i++){
+        let newData = {
+            "Name": studentsdata[i].name,
+            "Dob": studentsdata[i].dob,
+            "School": studentsdata[i].school,
+            "Class": studentsdata[i].class,
+            "Division": studentsdata[i].division,
+            "Status": studentsdata[i].status,
+        };
+        finalData.push(newData);
+    };
+    const workSheet = XLSX.utils.json_to_sheet(finalData);
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, "SheetName");
+    XLSX.writeFile(workBook, "Students.xlsx");
+    res.status(200).send({message: "Success", data: true});
 });
 
 // get students data

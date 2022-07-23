@@ -100,6 +100,16 @@
       });
     }
 
+    function downloadExcel(){
+      fetch("http://localhost:3000/downloadsheet").then(res => res.json()).then(data => {
+        if (data.data) {
+          alert("Downloaded done");
+        }
+      }).catch(err => {
+        console.log(err);
+      });
+    }
+
     function editStudent(id){
       localStorage.setItem('tunica_id', id);
       window.location.href = 'http://localhost:3000/updatestudent';
@@ -217,7 +227,7 @@
         </ul>
       </div>
       <div class="leftfloat">
-        <button class="download">Download Excel</button>
+        <button class="download" onclick="downloadExcel()">Download Excel</button>
       </div>
     </div>
   </div>
