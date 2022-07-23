@@ -41,6 +41,18 @@ app.get("/login", (req, res) => {
 });
 
 // get students data
+app.post("/getdatabyid", async (req, res) => {
+    const studentsdata = await AddStudent.findOne({_id: req.body.id});
+    res.status(200).send({message: "Success", data: studentsdata});
+});
+
+// update students data
+app.post("/updatestudentsdata", async (req, res) => {
+    const studentsdata = await AddStudent.updateOne({_id: req.body.id}, req.body.values);
+    res.status(200).send({message: "Success", data: true});
+});
+
+// get students data
 app.get("/getstudentsdata", async (req, res) => {
     const studentsdata = await AddStudent.find({});
     res.status(200).send({message: "Success", data: studentsdata});
