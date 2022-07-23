@@ -46,6 +46,12 @@ app.get("/getstudentsdata", async (req, res) => {
     res.status(200).send({message: "Success", data: studentsdata});
 });
 
+// delete students data
+app.post("/deletestudent", async (req, res) => {
+    const studentsdata = await AddStudent.remove({_id: req.body.id});
+    res.status(200).send({message: "Success", data: studentsdata});
+});
+
 // add students
 app.post("/addstudentdata", async (req, res) => {
     try {
@@ -64,7 +70,7 @@ app.post("/addstudentdata", async (req, res) => {
         console.log(err);
         res.status(400).send(err);
     }
-})
+});
 
 // create a new user in our database
 app.post("/register", async (req, res) => {
