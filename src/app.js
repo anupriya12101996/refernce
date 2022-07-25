@@ -8,11 +8,14 @@ const Register = require("./models/register");
 const AddStudent = require("./models/studentSchema");
 const { json } = require("express");
 const port = process.env.PORT || 3000;
+const XLSX = require("xlsx");
+const cors=require('cors');
 
 const static_path = (path.join(__dirname, "../public"));
 const template_path = (path.join(__dirname, "../templates/views"));
 const partials_path = (path.join(__dirname, "../templates/partials"));
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(static_path));
@@ -40,9 +43,49 @@ app.get("/login", (req, res) => {
     res.render("login");
 });
 
+// download excel sheet
+app.get("/downloadsheet", async (req, res) => {
+    const studentsdata = await AddStudent.find({});
+    let finalData = [];
+    for(let i = 0; i < studentsdata.length; i++){
+        let newData = {
+            "Name": studentsdata[i].name,
+            "Dob": studentsdata[i].dob,
+            "School": studentsdata[i].school,
+            "Class": studentsdata[i].class,
+            "Division": studentsdata[i].division,
+            "Status": studentsdata[i].status,
+        };
+        finalData.push(newData);
+    };
+    const workSheet = XLSX.utils.json_to_sheet(finalData);
+    const workBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workBook, workSheet, "SheetName");
+    XLSX.writeFile(workBook, "Students.xlsx");
+    res.status(200).send({message: "Success", data: true});
+});
+
+// get students data
+app.post("/getdatabyid", async (req, res) => {
+    const studentsdata = await AddStudent.findOne({_id: req.body.id});
+    res.status(200).send({message: "Success", data: studentsdata});
+});
+
+// update students data
+app.post("/updatestudentsdata", async (req, res) => {
+    const studentsdata = await AddStudent.updateOne({_id: req.body.id}, req.body.values);
+ res.status(200).send({message: "Success", data: true});
+});
+
 // get students data
 app.get("/getstudentsdata", async (req, res) => {
     const studentsdata = await AddStudent.find({});
+    res.status(200).send({message: "Success", data: studentsdata});
+});
+
+// delete students data
+app.post("/deletestudent", async (req, res) => {
+    const studentsdata = await AddStudent.remove({_id: req.body.id});
     res.status(200).send({message: "Success", data: studentsdata});
 });
 
@@ -64,7 +107,7 @@ app.post("/addstudentdata", async (req, res) => {
         console.log(err);
         res.status(400).send(err);
     }
-})
+});
 
 // create a new user in our database
 app.post("/register", async (req, res) => {

@@ -14,77 +14,111 @@
     td a {
       color: brown;
       text-decoration: underline;
+      cursor: pointer;
     }
   </style>
   <script type="text/javascript">
-  fetch('http://localhost:3000/getstudentsdata').then(res => res.json()).then(data => {
-    if(data.data){
-      let arr = data.data,
-      table = document.getElementsByTagName('table')[0],
-      tr = null,
-      td0 = null,
-      td1 = null,
-      td2 = null,
-      td3 = null,
-      td4 = null,
-      td5 = null,
-      td6 = null,
-      td7 = null,
-      td8 = null,
-      name = '',
-      school = '',
-      status = '',
-      classValue = '',
-      dob = '',
-      division = '';
+    fetch('https://localhost:3000/getstudentsdata').then(res => res.json()).then(data => {
+      if (data.data) {
+        let arr = data.data,
+          table = document.getElementsByTagName('table')[0],
+          tr = null,
+          td0 = null,
+          td1 = null,
+          td2 = null,
+          td3 = null,
+          td4 = null,
+          td5 = null,
+          td6 = null,
+          td7 = null,
+          td8 = null,
+          name = '',
+          school = '',
+          status = '',
+          classValue = '',
+          dob = '',
+          division = '';
 
-      for (let i = 0; i < arr.length; i++) {
-        td0 = document.createElement('td');
-        td0.innerHTML =  i+1;
-        td1 = document.createElement('td');
-        td1.innerHTML =  arr[i].name;
-        td2 = document.createElement('td');
-        td2.innerHTML = arr[i].dob;
-        td3 = document.createElement('td');
-        td3.innerHTML = arr[i].school;
-        td4 = document.createElement('td');
-        td4.innerHTML = arr[i].class;
-        td5 = document.createElement('td');
-        td5.innerHTML = arr[i].division;
-        td6 = document.createElement('td');
-        td6.innerHTML = arr[i].status == "on" ? "Active" : "Inactive";
-        td7 = document.createElement('td');
-        const anchor = document.createElement('a');
-        anchor.href = 'http://localhost:3000/updatestudent';
-        anchor.innerText = 'Edit';
-        td7.appendChild(anchor);
-        td8 = document.createElement('td');
-        const anchor2 = document.createElement('a');
-        anchor2.href = '#';
-        anchor2.innerText = 'Delete';
-        td8.appendChild(anchor2);
-        tr = document.createElement('tr');
-        
-        tr.appendChild(td0);
-        tr.appendChild(td1);
-        tr.appendChild(td2);
-        tr.appendChild(td3);
-        tr.appendChild(td4);
-        tr.appendChild(td5);
-        tr.appendChild(td6);
-        tr.appendChild(td7);
-        tr.appendChild(td8);
-        table.appendChild(tr);
+        for (let i = 0; i < arr.length; i++) {
+          td0 = document.createElement('td');
+          td0.innerHTML = i + 1;
+          td1 = document.createElement('td');
+          td1.innerHTML = arr[i].name;
+          td2 = document.createElement('td');
+          td2.innerHTML = arr[i].dob;
+          td3 = document.createElement('td');
+          td3.innerHTML = arr[i].school;
+          td4 = document.createElement('td');
+          td4.innerHTML = arr[i].class;
+          td5 = document.createElement('td');
+          td5.innerHTML = arr[i].division;
+          td6 = document.createElement('td');
+          td6.innerHTML = arr[i].status == "on" ? "Active" : "Inactive";
+          td7 = document.createElement('td');
+          const anchor = document.createElement('a');
+          anchor.innerText = 'Edit';
+          anchor.onclick = () => editStudent(arr[i]._id);
+          td7.appendChild(anchor);
+          td8 = document.createElement('td');
+          const anchor2 = document.createElement('a');
+          anchor2.innerText = 'Delete';
+          anchor2.onclick = () => deleteStudent(arr[i]._id);
+          td8.appendChild(anchor2);
+
+          tr = document.createElement('tr');
+          tr.appendChild(td0);
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tr.appendChild(td3);
+          tr.appendChild(td4);
+          tr.appendChild(td5);
+          tr.appendChild(td6);
+          tr.appendChild(td7);
+          tr.appendChild(td8);
+          table.appendChild(tr);
+        }
       }
+    }).catch(err => {
+      console.log(err);
+    });
+
+    function deleteStudent(id){
+      fetch("https://localhost:3000/deletestudent", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id: id
+        })
+      }).then(res => res.json()).then(data => {
+        if (data.data) {
+          window.location.reload();
+        }
+      }).catch(err => {
+        console.log(err);
+      });
     }
-  }).catch(err => {
-    console.log(err);
-  });
+
+    function downloadExcel(){
+      fetch("https://localhost:3000/downloadsheet").then(res => res.json()).then(data => {
+        if (data.data) {
+          alert("Downloaded done");
+        }
+      }).catch(err => {
+        console.log(err);
+      });
+    }
+
+    function editStudent(id){
+      localStorage.setItem('tunica_id', id);
+      window.location.href = 'https://localhost:3000/updatestudent';
+    }
+
   </script>
 </head>
 
 <body>
-
   <div class="wrapper">
     <div class="navbar">
       <div class="navbar_left">
@@ -193,7 +227,7 @@
         </ul>
       </div>
       <div class="leftfloat">
-        <button class="download">Download Excel</button>
+        <button class="download" onclick="downloadExcel()">Download Excel</button>
       </div>
     </div>
   </div>
