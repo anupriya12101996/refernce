@@ -11,7 +11,7 @@
   <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script type="text/javascript">
-    fetch('http://localhost:3000/getdatabyid', {
+    fetch('https://student-testingapp.herokuapp.com/getdatabyid', {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -51,7 +51,7 @@
           status,
         }
       };
-      fetch("http://localhost:3000/updatestudentsdata", {
+      fetch("https://student-testingapp.herokuapp.com/updatestudentsdata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -61,7 +61,7 @@
         .then(data => {
           if (data.data == true) {
             alert("Student Updated Successfully");
-            window.location.href = "http://localhost:3000/viewstudent";
+            window.location.href = "https://student-testingapp.herokuapp.com/viewstudent";
           } else {
             alert("Student Not Updated");
           }
