@@ -9,11 +9,13 @@ const AddStudent = require("./models/studentSchema");
 const { json } = require("express");
 const port = process.env.PORT || 3000;
 const XLSX = require("xlsx");
+const cors=require('cors');
 
 const static_path = (path.join(__dirname, "../public"));
 const template_path = (path.join(__dirname, "../templates/views"));
 const partials_path = (path.join(__dirname, "../templates/partials"));
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(static_path));
@@ -72,7 +74,7 @@ app.post("/getdatabyid", async (req, res) => {
 // update students data
 app.post("/updatestudentsdata", async (req, res) => {
     const studentsdata = await AddStudent.updateOne({_id: req.body.id}, req.body.values);
-    res.status(200).send({message: "Success", data: true});
+ res.status(200).send({message: "Success", data: true});
 });
 
 // get students data
