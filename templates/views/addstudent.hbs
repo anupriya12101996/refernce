@@ -25,7 +25,7 @@
         division,
         status,
       }
-      fetch("https://student-testingapp.herokuapp.com/addstudentdata", {
+      fetch("https://localhost:3000/addstudentdata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -35,7 +35,7 @@
         .then(data => {
           if (data.data == true) {
             alert("Student Added Successfully");
-            window.location.href = "https://student-testingapp.herokuapp.com/addstudent";
+            window.location.href = "https://localhost:3000/addstudent";
           } else {
             alert("Student Not Added");
           }
