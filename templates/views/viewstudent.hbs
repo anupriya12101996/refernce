@@ -18,7 +18,7 @@
     }
   </style>
   <script type="text/javascript">
-    fetch('http://localhost:3000/getstudentsdata').then(res => res.json()).then(data => {
+    fetch('http://127.0.0.1:3000/getstudentsdata').then(res => res.json()).then(data => {
       if (data.data) {
         let arr = data.data,
           table = document.getElementsByTagName('table')[0],
@@ -83,7 +83,7 @@
     });
 
     function deleteStudent(id){
-      fetch("http://localhost:3000/deletestudent", {
+      fetch("http://127.0.0.1:3000/deletestudent", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -101,7 +101,7 @@
     }
 
     function downloadExcel(){
-      fetch("http://localhost:3000/downloadsheet").then(res => res.json()).then(data => {
+      fetch("http://127.0.0.1:3000/downloadsheet").then(res => res.json()).then(data => {
         if (data.data) {
           alert("Downloaded done");
         }
@@ -112,7 +112,7 @@
 
     function editStudent(id){
       localStorage.setItem('tunica_id', id);
-      window.location.href = 'http://localhost:3000/updatestudent';
+      window.location.href = 'http://127.0.0.1:3000/updatestudent';
     }
 
   </script>
